@@ -19,12 +19,16 @@ This is my take on brainfuck. It isn't anything special, it's just a general imp
 		
 2- File I/O:
   This allows for very basic file reading & writing as such: 
-  
     Open file with '%'. Second call of '%' closes the file.
-  
     Use '^' to write the ASCII value of the current cell to the file and advance the position indicator for the stream.
-    
     Use 'v' to get ASCII value of character from file & copy it to currently pointed cell, and advance the position indicator for the stream.
+    EXAMPLE:
+    
+    %
+    ++++++++++++++++++++++++++++++++++++++++++++++++++++++++^>v.
+    %
+    OUTPUT: 8
+    FILE: 8
 		
   You have to add the location of the file as the second argument after the file you have your code in.
   EXAMPLE: 
