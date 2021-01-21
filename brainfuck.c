@@ -27,7 +27,7 @@ int main(int argc, char* argv[])
 	fseek(file, 0, SEEK_SET);
 	while(1)
 	{
-		static long int currentFPos = 0;
+		static long int currentFPos = -1;
 		static int fopenCount = 0;
 		static unsigned char c = 0;
 		if (feof(file))
@@ -42,6 +42,9 @@ int main(int argc, char* argv[])
 			if(tapePos <= 0)
 			{
 				perror("Cannot Access Array Index Smaller Than 0 \n");
+				if (filebf != NULL) { fclose(filebf); }
+				fclose(file);
+				free(tape);
 				return -1;
 			}
 			else
@@ -56,6 +59,9 @@ int main(int argc, char* argv[])
 			if (tapePos >= 29999)
 			{
 				perror("Cannot Access Array Index Greater Than 29999 \n");
+				if (filebf != NULL) { fclose(filebf); }
+				fclose(file);
+				free(tape);
 				return -1;
 			}
 			else
@@ -100,6 +106,7 @@ int main(int argc, char* argv[])
 			if (filebf == NULL)
 			{
 				printf("Unable to Open Fıle \n");
+				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
 				return -1;
@@ -115,6 +122,7 @@ int main(int argc, char* argv[])
 			if (fclose(filebf) == NULL)
 			{
 				printf("Unable to close file\n");
+				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
 				return -1;
@@ -129,7 +137,7 @@ int main(int argc, char* argv[])
 			if (fputc(tape[tapePos], filebf) == NULL)
 			{
 				printf("Unable to write to file\n");
-				fclose(filebf);
+				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
 				return -1;
@@ -145,7 +153,7 @@ int main(int argc, char* argv[])
 			if (tape[tapePos] == NULL)
 			{
 				printf("Unable to read from file\n");
-				fclose(filebf);
+				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
 				return -1;
@@ -204,7 +212,7 @@ int main(int argc, char* argv[])
 					if (feof(file))
 					{
 						printf("Unable to find expected ')'\n");
-						fclose(filebf);
+						if (filebf != NULL) { fclose(filebf); }
 						fclose(file);
 						free(tape);
 						return -1;
