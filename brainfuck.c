@@ -23,7 +23,7 @@ int main(int argc, char* argv[])
 		free(tape);
 		return -1;
 	}
-	
+
 	fseek(file, 0, SEEK_SET);
 	while(1)
 	{
@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
 		static unsigned char c = 0;
 		if (feof(file))
 		{
+			printf("\n");
 			break;
 		}
 		c = fgetc(file);
@@ -45,6 +46,7 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
+				//printf("Moving tape pointer to the left\n");
 				tapePos = tapePos - 1;
 			}
 
@@ -58,31 +60,38 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
+				//printf("Moving tape pointer to the right\n");
 				tapePos += 1;
 			}
 		}
 		else if (c == '+')
 		{
+			//printf("Incrementing Value of cell\n");
 			tape[tapePos]++;
 		}
 		else if (c == '-')
 		{
+			//printf("-1 Value of cell\n");
 			tape[tapePos]--;
 		}
 		else if (c == '.')
 		{
+		//printf("Printing out cell ASCII value\n");
 			printf("%c", tape[tapePos]);
 		}
 		else if (c == ',')
 		{
+			//printf("Inputing cell an ASCII value\n");
 			scanf("%c", tape[tapePos]);
 		}
 		else if (c == ':')
 		{
+			//printf("Printing out cell value\n");
 			printf("%i", tape[tapePos]);
 		}
 		else if (c == ';')
 		{
+			//printf("Inputting cell value\n");
 			scanf("%i", tape[tapePos]);
 		}
 		else if (c == '%' && fopenCount == 0)
@@ -97,6 +106,7 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
+				//printf("Opened file\n");
 				fopenCount++;
 			}
 		}
@@ -109,6 +119,10 @@ int main(int argc, char* argv[])
 				free(tape);
 				return -1;
 			}
+			else
+			{
+				//printf("Closing file\n");
+			}
 		}
 		else if (c == '^')
 		{
@@ -119,6 +133,10 @@ int main(int argc, char* argv[])
 				fclose(file);
 				free(tape);
 				return -1;
+			}
+			else
+			{
+				//printf("Cell value written to file\n");
 			}
 		}
 		else if (c == 'v')
@@ -132,6 +150,10 @@ int main(int argc, char* argv[])
 				free(tape);
 				return -1;
 			}
+			else
+			{
+				//printf("Getting value from file\n");
+			}
 		}
 		else if (c == '[')
 		{
@@ -141,29 +163,35 @@ int main(int argc, char* argv[])
 				{
 					if (feof(file))
 					{
-						printf("Unable to find expected ']'\n");
+						//printf("Unable to find expected ']'\n");
 						fclose(filebf);
 						fclose(file);
 						free(tape);
 						return -1;
 					}
+					//printf("Ending loop because cell == 0\n");
 					c = fgetc(file);
 				}
 			}
 			else if (tape[tapePos] != 0)
 			{
-				currentFPos = SEEK_CUR;
+				//printf("Loop begins hopefully\n");
+				currentFPos = ftell(file);
 			}
 		}
 		else if (c == ']')
 		{
 			if (tape[tapePos] == 0)
-			{ currentFPos = -1; }
+			{
+				//printf("Loop Ends\n"); 
+				currentFPos = -1;
+			}
 			else
 			{
 				if (currentFPos != -1)
 				{
-					fseek(file, 0, currentFPos);
+					//printf("Jumped back to loop beginning\n");
+					fseek(file, currentFPos, SEEK_SET);
 				}
 			}
 		}
@@ -172,7 +200,7 @@ int main(int argc, char* argv[])
 			if (tape[tapePos] == 0)
 			{
 				while (c != ')')
-				{ 
+				{
 					if (feof(file))
 					{
 						printf("Unable to find expected ')'\n");
@@ -185,7 +213,7 @@ int main(int argc, char* argv[])
 				}
 			}
 			else
-			{currentFPos = SEEK_CUR; }
+			{currentFPos = ftell(file); }
 		}
 		else if (c == ')')
 		{
@@ -195,7 +223,7 @@ int main(int argc, char* argv[])
 			{
 				if (currentFPos != -1)
 				{
-					fseek(file, 0, currentFPos);
+					fseek(file, currentFPos, SEEK_SET);
 				}
 			}
 		}
