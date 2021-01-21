@@ -285,7 +285,7 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				printf("Invalid syntax! %c \n", c);
+				printf("Invalid syntax!\n");
 				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
@@ -297,6 +297,8 @@ int main(int argc, char* argv[])
 			currentPos = ftell(file);
 			fseek(file, functionPos, SEEK_SET);
 			functionCount += 1;
+
+
 		}
 		else if (c == '}' && functionCount % 2 == 0)
 		{
