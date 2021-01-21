@@ -183,7 +183,7 @@ int main(int argc, char* argv[])
 		{
 			if (tape[tapePos] == 0)
 			{
-				//printf("Loop Ends\n"); 
+				//printf("Loop Ends\n");
 				currentFPos = -1;
 			}
 			else
@@ -213,19 +213,14 @@ int main(int argc, char* argv[])
 				}
 			}
 			else
-			{currentFPos = ftell(file); }
+			{}
 		}
 		else if (c == ')')
 		{
 			if (tape[tapePos] == 0)
-			{ currentFPos = -1; }
+			{}
 			else
-			{
-				if (currentFPos != -1)
-				{
-					fseek(file, currentFPos, SEEK_SET);
-				}
-			}
+			{}
 		}
 	}
 	fclose(file);
