@@ -15,20 +15,20 @@ int main(int argc, char* argv[])
 	}
 	int* tape = calloc(30000, sizeof(int));
 	unsigned int tapePos = 0;
-	FILE* filebf = NULL;
-	FILE* file = fopen(argv[1], "r+");
+	FILE* file = fopen(argv[1], "r");
 	if (file == NULL)
 	{
 		printf("Unable to open file \n");
 		free(tape);
 		return -1;
 	}
+	FILE* filebf = NULL;
+	static int fopenCount = 0;
 
 	fseek(file, 0, SEEK_SET);
 	while(1)
 	{
 		static long int currentFPos = -1;
-		static int fopenCount = 0;
 		static unsigned char c = 0;
 		if (feof(file))
 		{
@@ -105,8 +105,7 @@ int main(int argc, char* argv[])
 			filebf = fopen(argv[2], "r+");
 			if (filebf == NULL)
 			{
-				printf("Unable to Open Fıle \n");
-				if (filebf != NULL) { fclose(filebf); }
+				printf("Unable to Open File \n");
 				fclose(file);
 				free(tape);
 				return -1;
@@ -119,16 +118,16 @@ int main(int argc, char* argv[])
 		}
 		else if (c == '%' && fopenCount == 1)
 		{
-			if (fclose(filebf) == NULL)
+			if (fclose(filebf) == EOF)
 			{
 				printf("Unable to close file\n");
-				if (filebf != NULL) { fclose(filebf); }
 				fclose(file);
 				free(tape);
 				return -1;
 			}
 			else
 			{
+				fopenCount++;
 				//printf("Closing file\n");
 			}
 		}
@@ -171,8 +170,8 @@ int main(int argc, char* argv[])
 				{
 					if (feof(file))
 					{
-						//printf("Unable to find expected ']'\n");
-						fclose(filebf);
+						printf("Unable to find expected ']'\n");
+						if (filebf != NULL) { fclose(filebf); }
 						fclose(file);
 						free(tape);
 						return -1;
@@ -232,7 +231,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	fclose(file);
-	if (filebf != NULL) { fclose(filebf); }
+	if (filebf != NULL && fopenCount != 2) { fclose(filebf); }
 	free(tape);
 	return 0;
 }
